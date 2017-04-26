@@ -6,6 +6,8 @@ import hudson.Util;
 import hudson.model.AbstractBuild;
 import hudson.model.AbstractProject;
 import hudson.model.Action;
+import hudson.model.Cause;
+import hudson.model.CauseAction;
 import hudson.model.Computer;
 import hudson.model.Job;
 import hudson.model.Node;
@@ -18,12 +20,19 @@ import hudson.util.DescribableList;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import javax.annotation.CheckForNull;
 import javax.annotation.Nonnull;
 import jenkins.model.Jenkins;
 import jenkins.security.MasterToSlaveCallable;
 import org.jenkinsci.lib.envinject.EnvInjectException;
+import static org.jenkinsci.plugins.envinjectapi.util.CauseHelper.ENV_CAUSE;
+import static org.jenkinsci.plugins.envinjectapi.util.CauseHelper.ENV_ROOT_CAUSE;
 
 /**
  * Provides utility methods for resolving environment variables.
@@ -224,6 +233,34 @@ public class EnvVarsResolver {
             throw new EnvInjectException(ie);
         }
     }
+    
+    // Moved from EnvInject
+    
+    /**
+     * Retrieves variables describing the Run cause. 
+     * @param run Run
+     * @return Set of environment variables, which depends on the cause type. 
+     */
+    @Nonnull
+    public static Map<String, String> getCauseEnvVars(@Nonnull Run<?, ?> run) {
+        CauseAction causeAction = run.getAction(CauseAction.class);
+        Map<String, String> env = new HashMap<>();
+        List<String> directCauseNames = new ArrayList<>();
+        Set<String> rootCauseNames = new LinkedHashSet<>();
 
+        if (causeAction != null) {
+            List<Cause> buildCauses = causeAction.getCauses();
+            for (Cause cause : buildCauses) {
+                directCauseNames.add(CauseHelper.getTriggerName(cause));
+                CauseHelper.insertRootCauseNames(rootCauseNames, cause, 0);
+            }
+        } else {
+            directCauseNames.add("UNKNOWN");
+            rootCauseNames.add("UNKNOWN");
+        }
+        env.putAll(CauseHelper.buildCauseEnvironmentVariables(ENV_CAUSE, directCauseNames));
+        env.putAll(CauseHelper.buildCauseEnvironmentVariables(ENV_ROOT_CAUSE, rootCauseNames));
+        return env;
+    }
 }
 
