@@ -10,7 +10,7 @@ As an API plugin, it guarantees backward compatibility of API and does not contr
 
 ## Documentation
 
-* [Changelog](CHANGELOG.md).
+* [Changelog](CHANGELOG.md)
 * [Plugin Javadoc](http://javadoc.jenkins.io/plugin/envinject-api/)
 
 ## License
