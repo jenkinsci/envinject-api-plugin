@@ -5,11 +5,14 @@ import hudson.model.TaskListener;
 import java.io.Serializable;
 
 /**
+ * Utility class for logging EnvInject messages to the run.
  * @author Gregory Boissinot
  */
 public class EnvInjectLogger implements Serializable {
 
-    private TaskListener listener;
+    private static final long serialVersionUID = 1L;
+
+    private final TaskListener listener;
 
     public EnvInjectLogger(TaskListener listener) {
         this.listener = listener;

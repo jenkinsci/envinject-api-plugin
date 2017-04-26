@@ -3,7 +3,14 @@ package org.jenkinsci.plugins.envinjectapi.util;
 import hudson.EnvVars;
 import hudson.FilePath;
 import hudson.Util;
-import hudson.model.*;
+import hudson.model.AbstractBuild;
+import hudson.model.AbstractProject;
+import hudson.model.Action;
+import hudson.model.Computer;
+import hudson.model.Hudson;
+import hudson.model.Job;
+import hudson.model.Node;
+import hudson.model.Run;
 import hudson.remoting.Callable;
 import hudson.slaves.EnvironmentVariablesNodeProperty;
 import hudson.slaves.NodeProperty;
@@ -11,27 +18,31 @@ import hudson.slaves.NodePropertyDescriptor;
 import hudson.util.DescribableList;
 
 import java.io.IOException;
-import java.io.Serializable;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Map;
+import javax.annotation.CheckForNull;
+import javax.annotation.Nonnull;
+import jenkins.model.Jenkins;
 import org.jenkinsci.lib.envinject.EnvInjectException;
 
 /**
+ * Provides utility methods for resolving environment variables.
  * @author Gregory Boissinot
+ * @author Oleg Nenashev
  */
-public class EnvVarsResolver implements Serializable {
+public class EnvVarsResolver {
 
-    public Map<String, String> getPollingEnvVars(Job<?, ?> job, /*can be null*/ Node node) throws EnvInjectException {
+    private EnvVarsResolver() {
+        // Cannot be instantinated
+    }
+    
+    @Nonnull
+    public static Map<String, String> getPollingEnvVars(@Nonnull Job<?, ?> job, @CheckForNull Node node) throws EnvInjectException {
 
-        if (job == null) {
-            throw new NullPointerException("A project object must be set.");
-        }
-
-        Run lastBuild = job.getLastBuild();
+        final Run<?, ?> lastBuild = job.getLastBuild();
         if (lastBuild != null) {
-            EnvInjectDetector detector = new EnvInjectDetector();
-            if (detector.isEnvInjectPluginInstalled()) {
+            if (EnvInjectPluginHelper.isEnvInjectPluginInstalled()) {
                 return getEnVars(lastBuild);
             }
         }
@@ -46,14 +57,9 @@ public class EnvVarsResolver implements Serializable {
         return getDefaultEnvVarsJob(job, node);
     }
 
-    public Map<String, String> getEnVars(Run<?, ?> run) throws EnvInjectException {
-
-        if (run == null) {
-            throw new NullPointerException("A build object must be set.");
-        }
-
-        EnvInjectActionRetriever envInjectActionRetriever = new EnvInjectActionRetriever();
-        Action envInjectAction = envInjectActionRetriever.getEnvInjectAction(run);
+    @Nonnull
+    public static Map<String, String> getEnVars(@Nonnull Run<?, ?> run) throws EnvInjectException {
+        Action envInjectAction = EnvInjectActionRetriever.getEnvInjectAction(run);
         if (envInjectAction != null) {
             try {
                 Method method = envInjectAction.getClass().getMethod("getEnvMap");
@@ -63,6 +69,8 @@ public class EnvVarsResolver implements Serializable {
             } catch (InvocationTargetException e) {
                 throw new EnvInjectException(e);
             } catch (IllegalAccessException e) {
+                throw new EnvInjectException(e);
+            } catch (ClassCastException e) {
                 throw new EnvInjectException(e);
             }
         }
@@ -82,28 +90,26 @@ public class EnvVarsResolver implements Serializable {
         return getDefaultEnvVarsJob(run.getParent(), builtOn);
     }
 
-    private Map<String, String> getFallBackMasterNode(Job<?, ?> job) throws EnvInjectException {
-        Node masterNode = getMasterNode();
+    @Nonnull
+    private static Map<String, String> getFallBackMasterNode(@Nonnull Job<?, ?> job) throws EnvInjectException {
+        final Node masterNode = getMasterNode();
         if (masterNode == null) {
             return gatherEnvVarsMaster(job);
         }
         return getDefaultEnvVarsJob(job, masterNode);
     }
 
-    private Node getMasterNode() {
-        Computer computer = Hudson.getInstance().toComputer();
+    @CheckForNull
+    private static Node getMasterNode() {
+        Computer computer = Jenkins.getInstance().toComputer();
         if (computer == null) {
             return null; //Master can have no executors
         }
         return computer.getNode();
     }
 
-    public String resolveEnvVars(Run<?, ?> run, String value) throws EnvInjectException {
-
-        if (run == null) {
-            throw new NullPointerException("A build object must be set.");
-        }
-
+    @CheckForNull
+    public static String resolveEnvVars(@Nonnull Run<?, ?> run, @CheckForNull String value) throws EnvInjectException {
         if (value == null) {
             return null;
         }
@@ -111,10 +117,9 @@ public class EnvVarsResolver implements Serializable {
         return Util.replaceMacro(value, getEnVars(run));
     }
 
-
-    private Map<String, String> getDefaultEnvVarsJob(Job<?, ?> job, Node node) throws EnvInjectException {
-        assert job != null;
-        assert node != null;
+    @Nonnull
+    private static Map<String, String> getDefaultEnvVarsJob(@Nonnull Job<?, ?> job, @Nonnull Node node) throws EnvInjectException {
+        // TODO: wat
         assert node.getRootPath() != null;
         //--- Same code for master or a slave node
         Map<String, String> result = gatherEnvVarsMaster(job);
@@ -123,7 +128,8 @@ public class EnvVarsResolver implements Serializable {
         return result;
     }
 
-    private Map<String, String> gatherEnvVarsMaster(Job<?, ?> job) throws EnvInjectException {
+    @Nonnull
+    private static Map<String, String> gatherEnvVarsMaster(@Nonnull Job<?, ?> job) throws EnvInjectException {
         assert job != null;
         EnvVars env = new EnvVars();
         env.put("JENKINS_SERVER_COOKIE", Util.getDigestOf("ServerID:" + Hudson.getInstance().getSecretKey()));
@@ -144,13 +150,14 @@ public class EnvVarsResolver implements Serializable {
 
     //Strong limitation: Restrict here to EnvironmentVariablesNodeProperty subclasses
     //in order to avoid the propagation of a Launcher object and a BuildListener object
-    private Map<String, String> gatherEnvVarsNodeProperties(Node node) throws EnvInjectException {
+    @Nonnull
+    private static Map<String, String> gatherEnvVarsNodeProperties(@CheckForNull Node node) throws EnvInjectException {
 
         EnvVars env = new EnvVars();
 
-        Hudson hudson = Hudson.getInstance();
-        if (hudson != null) {
-            DescribableList<NodeProperty<?>, NodePropertyDescriptor> globalNodeProperties = hudson.getGlobalNodeProperties();
+        Jenkins jenkins = Jenkins.getInstance();
+        if (jenkins != null) {
+            DescribableList<NodeProperty<?>, NodePropertyDescriptor> globalNodeProperties = jenkins.getGlobalNodeProperties();
             if (globalNodeProperties != null) {
                 for (NodeProperty nodeProperty : globalNodeProperties) {
                     if (nodeProperty != null && nodeProperty instanceof EnvironmentVariablesNodeProperty) {
@@ -183,9 +190,8 @@ public class EnvVarsResolver implements Serializable {
         return env;
     }
 
-    private Map<String, String> gatherEnvVarsNode(Job<?, ?> job, Node node) throws EnvInjectException {
-        assert job != null;
-        assert node != null;
+    @Nonnull
+    private static Map<String, String> gatherEnvVarsNode(@Nonnull Job<?, ?> job, @Nonnull Node node) throws EnvInjectException {
         assert node.getRootPath() != null;
         try {
             Map<String, String> envVars = new EnvVars(node.getRootPath().act(new Callable<Map<String, String>, EnvInjectException>() {

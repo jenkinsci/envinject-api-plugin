@@ -5,17 +5,26 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.StringTokenizer;
 import java.util.TreeMap;
+import javax.annotation.CheckForNull;
+import javax.annotation.Nonnull;
 import org.jenkinsci.lib.envinject.EnvInjectException;
 
 /**
+ * Provides methods for disk persistency of environment variables.
  * @author Gregory Boissinot
+ * @author Oleg Nenashev
  */
-public class EnvInjectSavable {
+public class EnvInjectVarsIO {
 
     private static final String ENVINJECT_TXT_FILENAME = "injectedEnvVars.txt";
     private static final String TOKEN = "=";
 
-    public Map<String, String> getEnvironment(File envInjectBaseDir) throws EnvInjectException {
+    private EnvInjectVarsIO() {
+        // Cannot be instantinated
+    }
+    
+    @CheckForNull
+    public static Map<String, String> getEnvironment(@Nonnull File envInjectBaseDir) throws EnvInjectException {
 
         if (envInjectBaseDir == null) {
             throw new NullPointerException("A base directory of the envinject file must be set.");
@@ -44,7 +53,7 @@ public class EnvInjectSavable {
         }
     }
 
-    public void saveEnvironment(File rootDir, Map<String, String> envMap) throws EnvInjectException {
+    public static void saveEnvironment(@Nonnull File rootDir, @Nonnull Map<String, String> envMap) throws EnvInjectException {
         FileWriter fileWriter = null;
         try {
             File f = new File(rootDir, ENVINJECT_TXT_FILENAME);
@@ -67,7 +76,7 @@ public class EnvInjectSavable {
         }
     }
 
-    private void fromTxt(FileReader fileReader, Map<String, String> result) throws EnvInjectException {
+    private static void fromTxt(@Nonnull FileReader fileReader, @Nonnull Map<String, String> result) throws EnvInjectException {
         BufferedReader bufferedReader = new BufferedReader(fileReader);
         String line;
         try {
@@ -81,19 +90,17 @@ public class EnvInjectSavable {
         } catch (IOException ioe) {
             throw new EnvInjectException(ioe);
         } finally {
-            if (bufferedReader != null) {
-                try {
-                    bufferedReader.close();
-                } catch (IOException ioe) {
-                    throw new EnvInjectException(ioe);
-                }
+            try {
+                bufferedReader.close();
+            } catch (IOException ioe) {
+                throw new EnvInjectException(ioe);
             }
         }
     }
 
-    private void toTxt(Map<String, String> envMap, FileWriter fw) throws IOException {
+    private static void toTxt(@Nonnull Map<String, String> envMap, @Nonnull FileWriter fw) throws IOException {
         for (Map.Entry<String, String> entry : envMap.entrySet()) {
-            fw.write(String.format("%s%s%s\n", entry.getKey(), TOKEN, entry.getValue()));
+            fw.write(String.format("%s%s%s%n", entry.getKey(), TOKEN, entry.getValue()));
         }
     }
 
