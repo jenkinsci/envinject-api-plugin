@@ -35,6 +35,8 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <java.level>6</java.level>
     <jenkins.version>1.532</jenkins.version>
+    <!--TODO: Replace by the release version-->
+    <envinject.lib.version>1.25-SNAPSHOT</envinject.lib.version>
   </properties>
 
   <scm>
@@ -42,6 +44,14 @@
     <developerConnection>scm:git:git@github.com:jenkinsci/envinject-lib.git</developerConnection>
     <tag>HEAD</tag>
   </scm>
+  
+  <dependencies>
+    <dependency>
+      <groupId>org.jenkins-ci.lib</groupId>
+      <artifactId>envinject-lib</artifactId>
+      <version>${envinject.lib.version}</version>
+    </dependency>
+  </dependencies>
 
   <repositories>
     <repository>

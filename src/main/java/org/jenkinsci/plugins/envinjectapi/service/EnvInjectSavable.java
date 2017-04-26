@@ -1,12 +1,11 @@
 package org.jenkinsci.plugins.envinjectapi.service;
 
-import org.jenkinsci.plugins.envinjectapi.EnvInjectException;
-
 import java.io.*;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.StringTokenizer;
 import java.util.TreeMap;
+import org.jenkinsci.lib.envinject.EnvInjectException;
 
 /**
  * @author Gregory Boissinot

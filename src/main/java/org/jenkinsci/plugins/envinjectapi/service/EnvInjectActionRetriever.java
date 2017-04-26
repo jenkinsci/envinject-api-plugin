@@ -2,7 +2,6 @@ package org.jenkinsci.plugins.envinjectapi.service;
 
 import hudson.model.Action;
 import hudson.model.Run;
-import org.jenkinsci.plugins.envinjectapi.EnvInjectAction;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -10,6 +9,7 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.Nonnull;
+import org.jenkinsci.lib.envinject.EnvInjectAction;
 
 /**
  * @author Gregory Boissinot

@@ -9,13 +9,13 @@ import hudson.slaves.EnvironmentVariablesNodeProperty;
 import hudson.slaves.NodeProperty;
 import hudson.slaves.NodePropertyDescriptor;
 import hudson.util.DescribableList;
-import org.jenkinsci.plugins.envinjectapi.EnvInjectException;
 
 import java.io.IOException;
 import java.io.Serializable;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Map;
+import org.jenkinsci.lib.envinject.EnvInjectException;
 
 /**
  * @author Gregory Boissinot
