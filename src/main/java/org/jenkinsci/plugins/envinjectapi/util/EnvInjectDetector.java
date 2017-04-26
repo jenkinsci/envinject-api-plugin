@@ -1,4 +1,4 @@
-package org.jenkinsci.plugins.envinjectapi.service;
+package org.jenkinsci.plugins.envinjectapi.util;
 
 import hudson.Plugin;
 import hudson.model.Action;

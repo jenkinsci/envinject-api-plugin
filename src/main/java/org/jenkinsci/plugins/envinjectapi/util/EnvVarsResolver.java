@@ -1,4 +1,4 @@
-package org.jenkinsci.plugins.envinjectapi.service;
+package org.jenkinsci.plugins.envinjectapi.util;
 
 import hudson.EnvVars;
 import hudson.FilePath;
