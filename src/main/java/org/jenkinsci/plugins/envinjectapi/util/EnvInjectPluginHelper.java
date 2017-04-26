@@ -2,9 +2,9 @@ package org.jenkinsci.plugins.envinjectapi.util;
 
 import hudson.Plugin;
 import hudson.model.Action;
-import hudson.model.Hudson;
 import hudson.model.Run;
 import javax.annotation.Nonnull;
+import jenkins.model.Jenkins;
 import org.jenkinsci.lib.envinject.EnvInjectAction;
 
 /**
@@ -25,11 +25,6 @@ public class EnvInjectPluginHelper {
      * @return {@code true} if the run has {@link EnvInjectAction} 
      */
     public static boolean isEnvInjectActivated(@Nonnull Run<?, ?> run) {
-
-        if (run == null) {
-            throw new NullPointerException("A build object must be set.");
-        }
-
         Action envInjectAction = EnvInjectActionRetriever.getEnvInjectAction(run);
         return envInjectAction != null;
     }
@@ -39,7 +34,11 @@ public class EnvInjectPluginHelper {
      * @return {@code true} If the plugin is installed. It may be not activated.
      */
     public static boolean isEnvInjectPluginInstalled() {
-        Plugin envInjectPlugin = Hudson.getInstance().getPlugin("envinject");
+        final Jenkins jenkins = Jenkins.getInstance();
+        if (jenkins == null) {
+            return false;
+        }
+        Plugin envInjectPlugin = jenkins.getPlugin("envinject");
         return envInjectPlugin != null;
     }
 }

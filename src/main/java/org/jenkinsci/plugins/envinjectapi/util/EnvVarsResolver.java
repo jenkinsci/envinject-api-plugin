@@ -7,11 +7,9 @@ import hudson.model.AbstractBuild;
 import hudson.model.AbstractProject;
 import hudson.model.Action;
 import hudson.model.Computer;
-import hudson.model.Hudson;
 import hudson.model.Job;
 import hudson.model.Node;
 import hudson.model.Run;
-import hudson.remoting.Callable;
 import hudson.slaves.EnvironmentVariablesNodeProperty;
 import hudson.slaves.NodeProperty;
 import hudson.slaves.NodePropertyDescriptor;
@@ -24,6 +22,7 @@ import java.util.Map;
 import javax.annotation.CheckForNull;
 import javax.annotation.Nonnull;
 import jenkins.model.Jenkins;
+import jenkins.security.MasterToSlaveCallable;
 import org.jenkinsci.lib.envinject.EnvInjectException;
 
 /**
@@ -64,13 +63,7 @@ public class EnvVarsResolver {
             try {
                 Method method = envInjectAction.getClass().getMethod("getEnvMap");
                 return (Map<String, String>) method.invoke(envInjectAction);
-            } catch (NoSuchMethodException e) {
-                throw new EnvInjectException(e);
-            } catch (InvocationTargetException e) {
-                throw new EnvInjectException(e);
-            } catch (IllegalAccessException e) {
-                throw new EnvInjectException(e);
-            } catch (ClassCastException e) {
+            } catch (NoSuchMethodException | InvocationTargetException | IllegalAccessException | ClassCastException e) {
                 throw new EnvInjectException(e);
             }
         }
@@ -101,7 +94,11 @@ public class EnvVarsResolver {
 
     @CheckForNull
     private static Node getMasterNode() {
-        Computer computer = Jenkins.getInstance().toComputer();
+        final Jenkins jenkins  = Jenkins.getInstance();
+        if (jenkins == null) {
+            return null;
+        }
+        Computer computer = jenkins.toComputer();
         if (computer == null) {
             return null; //Master can have no executors
         }
@@ -130,15 +127,17 @@ public class EnvVarsResolver {
 
     @Nonnull
     private static Map<String, String> gatherEnvVarsMaster(@Nonnull Job<?, ?> job) throws EnvInjectException {
-        assert job != null;
+        Jenkins jenkins = JenkinsHelper.getInstance();
+        
         EnvVars env = new EnvVars();
-        env.put("JENKINS_SERVER_COOKIE", Util.getDigestOf("ServerID:" + Hudson.getInstance().getSecretKey()));
-        env.put("HUDSON_SERVER_COOKIE", Util.getDigestOf("ServerID:" + Hudson.getInstance().getSecretKey())); // Legacy compatibility
+        env.put("JENKINS_SERVER_COOKIE", Util.getDigestOf("ServerID:" + jenkins.getSecretKey()));
+        env.put("HUDSON_SERVER_COOKIE", Util.getDigestOf("ServerID:" + jenkins.getSecretKey())); // Legacy compatibility
         env.put("JOB_NAME", job.getFullName());
-        env.put("JENKINS_HOME", Hudson.getInstance().getRootDir().getPath());
-        env.put("HUDSON_HOME", Hudson.getInstance().getRootDir().getPath());   // legacy compatibility
+        
+        env.put("JENKINS_HOME", jenkins.getRootDir().getPath());
+        env.put("HUDSON_HOME", jenkins.getRootDir().getPath());   // legacy compatibility
 
-        String rootUrl = Hudson.getInstance().getRootUrl();
+        String rootUrl = jenkins.getRootUrl();
         if (rootUrl != null) {
             env.put("JENKINS_URL", rootUrl);
             env.put("HUDSON_URL", rootUrl); // Legacy compatibility
@@ -169,17 +168,15 @@ public class EnvVarsResolver {
 
         if (node != null) {
             DescribableList<NodeProperty<?>, NodePropertyDescriptor> nodeProperties = node.getNodeProperties();
-            if (nodeProperties != null) {
-                for (NodeProperty nodeProperty : nodeProperties) {
-                    if (nodeProperty != null && nodeProperty instanceof EnvironmentVariablesNodeProperty) {
-                        EnvVars envVars = ((EnvironmentVariablesNodeProperty) nodeProperty).getEnvVars();
-                        if (envVars != null) {
-                            for (Map.Entry<String, String> entry : envVars.entrySet()) {
-                                String key = entry.getKey();
-                                String value = entry.getValue();
-                                if (key != null && value != null) {
-                                    env.put(key, value);
-                                }
+            for (NodeProperty nodeProperty : nodeProperties) {
+                if (nodeProperty != null && nodeProperty instanceof EnvironmentVariablesNodeProperty) {
+                    EnvVars envVars = ((EnvironmentVariablesNodeProperty) nodeProperty).getEnvVars();
+                    if (envVars != null) {
+                        for (Map.Entry<String, String> entry : envVars.entrySet()) {
+                            String key = entry.getKey();
+                            String value = entry.getValue();
+                            if (key != null && value != null) {
+                                env.put(key, value);
                             }
                         }
                     }
@@ -192,9 +189,18 @@ public class EnvVarsResolver {
 
     @Nonnull
     private static Map<String, String> gatherEnvVarsNode(@Nonnull Job<?, ?> job, @Nonnull Node node) throws EnvInjectException {
-        assert node.getRootPath() != null;
+        
+        final FilePath rootPath = node.getRootPath();
+        if (rootPath == null) {
+            //TODO: better than the original NPE. But maybe it's preferable to have more intelligent handling
+            throw new EnvInjectException("Cannot retrieve Environment variables from the offline node");
+        }
+        
         try {
-            Map<String, String> envVars = new EnvVars(node.getRootPath().act(new Callable<Map<String, String>, EnvInjectException>() {
+            Map<String, String> envVars = new EnvVars(rootPath.act(new MasterToSlaveCallable<Map<String, String>, EnvInjectException>() {
+                private static final long serialVersionUID = 1L;
+                   
+                @Override
                 public Map<String, String> call() throws EnvInjectException {
                     return EnvVars.masterEnvVars;
                 }

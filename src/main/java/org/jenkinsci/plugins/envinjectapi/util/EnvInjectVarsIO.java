@@ -25,11 +25,6 @@ public class EnvInjectVarsIO {
     
     @CheckForNull
     public static Map<String, String> getEnvironment(@Nonnull File envInjectBaseDir) throws EnvInjectException {
-
-        if (envInjectBaseDir == null) {
-            throw new NullPointerException("A base directory of the envinject file must be set.");
-        }
-
         FileReader fileReader = null;
         try {
             File f = new File(envInjectBaseDir, ENVINJECT_TXT_FILENAME);
@@ -37,7 +32,7 @@ public class EnvInjectVarsIO {
                 return null;
             }
             fileReader = new FileReader(f);
-            Map result = new HashMap();
+            Map<String, String> result = new HashMap<>();
             fromTxt(fileReader, result);
             return result;
         } catch (FileNotFoundException fne) {
@@ -58,7 +53,7 @@ public class EnvInjectVarsIO {
         try {
             File f = new File(rootDir, ENVINJECT_TXT_FILENAME);
             fileWriter = new FileWriter(f);
-            Map<String, String> map2Write = new TreeMap<String, String>();
+            Map<String, String> map2Write = new TreeMap<>();
             map2Write.putAll(envMap);
             toTxt(map2Write, fileWriter);
         } catch (FileNotFoundException fne) {
