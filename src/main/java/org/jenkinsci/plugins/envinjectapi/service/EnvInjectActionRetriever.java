@@ -1,8 +1,8 @@
-package org.jenkinsci.lib.envinject.service;
+package org.jenkinsci.plugins.envinjectapi.service;
 
 import hudson.model.Action;
 import hudson.model.Run;
-import org.jenkinsci.lib.envinject.EnvInjectAction;
+import org.jenkinsci.plugins.envinjectapi.EnvInjectAction;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;

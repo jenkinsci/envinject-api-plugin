@@ -1,10 +1,10 @@
-package org.jenkinsci.lib.envinject;
+package org.jenkinsci.plugins.envinjectapi;
 
 import com.google.common.collect.Maps;
 import hudson.model.Job;
 import hudson.model.Run;
 import org.apache.commons.collections.map.UnmodifiableMap;
-import org.jenkinsci.lib.envinject.service.EnvInjectSavable;
+import org.jenkinsci.plugins.envinjectapi.service.EnvInjectSavable;
 import org.kohsuke.stapler.StaplerProxy;
 
 import java.io.File;

@@ -1,4 +1,4 @@
-package org.jenkinsci.lib.envinject;
+package org.jenkinsci.plugins.envinjectapi;
 
 import hudson.model.TaskListener;
 

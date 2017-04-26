@@ -1,6 +1,6 @@
-package org.jenkinsci.lib.envinject.service;
+package org.jenkinsci.plugins.envinjectapi.service;
 
-import org.jenkinsci.lib.envinject.EnvInjectException;
+import org.jenkinsci.plugins.envinjectapi.EnvInjectException;
 
 import java.io.*;
 import java.util.HashMap;

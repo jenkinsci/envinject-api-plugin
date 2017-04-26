@@ -1,4 +1,4 @@
-package org.jenkinsci.lib.envinject.service;
+package org.jenkinsci.plugins.envinjectapi.service;
 
 import hudson.EnvVars;
 import hudson.FilePath;
@@ -9,7 +9,7 @@ import hudson.slaves.EnvironmentVariablesNodeProperty;
 import hudson.slaves.NodeProperty;
 import hudson.slaves.NodePropertyDescriptor;
 import hudson.util.DescribableList;
-import org.jenkinsci.lib.envinject.EnvInjectException;
+import org.jenkinsci.plugins.envinjectapi.EnvInjectException;
 
 import java.io.IOException;
 import java.io.Serializable;
