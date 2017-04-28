@@ -1,0 +1,5 @@
+<?jelly escape-by-default='true'?>
+<div>
+  Stores shared logic for Environment Injection management in Jenkins.
+  It is being used in plugins like <a href="https://plugins.jenkins.io/envinject">EnvInject Plugin</a>.  
+</div>
