@@ -136,7 +136,12 @@ public class EnvVarsResolver {
 
     @Nonnull
     private static Map<String, String> gatherEnvVarsMaster(@Nonnull Job<?, ?> job) throws EnvInjectException {
-        Jenkins jenkins = JenkinsHelper.getInstance();
+        final Jenkins jenkins;
+        try {
+            jenkins = Jenkins.getActiveInstance();
+        } catch(IllegalStateException ex) {
+            throw new EnvInjectException(ex);
+        }
         
         EnvVars env = new EnvVars();
         env.put("JENKINS_SERVER_COOKIE", Util.getDigestOf("ServerID:" + jenkins.getSecretKey()));
