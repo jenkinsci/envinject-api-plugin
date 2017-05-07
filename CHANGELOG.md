@@ -3,7 +3,7 @@ Changelog
 
 ### 1.0
 
-Release date: Coming soon
+Release date: _May 05, 2017_
 
 * [JENKINS-43845](https://issues.jenkins-ci.org/browse/JENKINS-43845) -
 Create EnvInject API Plugin, which provides a shared [Jenkins EnvInject Library](https://github.com/jenkinsci/envinject-lib).
