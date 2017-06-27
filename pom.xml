@@ -10,7 +10,7 @@
 
   <artifactId>envinject-api</artifactId>
   <version>1.2-SNAPSHOT</version>
-  <packaging>jar</packaging>
+  <packaging>hpi</packaging>
   <name>EnvInject API Plugin</name>
   <description>Stores shared logic for Environment Injection management</description>
   <url>https://wiki.jenkins-ci.org/display/JENKINS/EnvInject+API+Plugin</url>

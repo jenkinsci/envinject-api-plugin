@@ -1,13 +1,18 @@
 Changelog
 ===
 
-### 1.1
+### 1.2
 
 Release date: _June 27, 2017_
 
 * [JENKINS-45056](https://issues.jenkins-ci.org/browse/JENKINS-45056) - 
 Fix issue with the incorrect plugin packaging in 1.0 due to the release flow issue.
   * Now it is a plugin available via update center
+
+### 1.1
+
+Release date: _June 27, 2017_
+
 * [JENKINS-45055](https://issues.jenkins-ci.org/browse/JENKINS-45055) - 
 Update EnvInject Lib from 1.25 to 1.26 in order to pick FindBugs fixes ([changelog](https://github.com/jenkinsci/envinject-lib/blob/master/CHANGELOG.md#126)).
 
