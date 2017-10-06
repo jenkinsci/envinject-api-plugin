@@ -1,6 +1,15 @@
 Changelog
 ===
 
+### 1.3
+
+Release date: _Oct 07, 2017_
+
+* Update to EnvInject Lib 1.27
+([full changelog](https://github.com/jenkinsci/envinject-lib/blob/master/CHANGELOG.md#127)).
+* [JENKINS-46479](https://issues.jenkins-ci.org/browse/JENKINS-46479) -
+EnvInject Lib 1.27: Prevent environment variables from being deleted on existing builds.
+
 ### 1.2
 
 Release date: _June 27, 2017_
