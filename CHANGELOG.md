@@ -1,6 +1,14 @@
 Changelog
 ===
 
+### 1.5
+
+Release date: _Dec 28, 2017_
+
+* Update EnvInject Lib to 1.29 ([changelog](https://github.com/jenkinsci/envinject-lib/blob/master/CHANGELOG.md#129))
+* [PR #4](https://github.com/jenkinsci/envinject-api-plugin/pull/4) - 
+Remove hidden string concatenation in `EnvInjectVarsIO#toTxt()` to reduce memory consumption.
+
 ### 1.4
 
 Release date: _Oct 24, 2017_
