@@ -37,7 +37,7 @@ public class EnvInjectActionRetriever {
         try {
             Class<?> matrixClass = Class.forName("hudson.matrix.MatrixRun");
             if (matrixClass.isInstance(run)) {
-                Method method = matrixClass.getMethod("getParentBuild", null);
+                Method method = matrixClass.getMethod("getParentBuild");
                 Object object = method.invoke(run);
                 if (object instanceof Run<?, ?>) {
                     run = (Run<?, ?>) object;
@@ -47,12 +47,10 @@ public class EnvInjectActionRetriever {
             LOGGER.log(Level.FINEST, "hudson.matrix.MatrixRun is not installed", e);
         } catch (NoSuchMethodException e) {
             LOGGER.log(Level.WARNING, "The method getParentBuild does not exist for hudson.matrix.MatrixRun", e);
-        } catch (IllegalAccessException e) {
-            LOGGER.log(Level.WARNING, "There was a problem in the invocation of getParentBuild in hudson.matrix.MatrixRun", e);
-        } catch (InvocationTargetException e) {
+        } catch (IllegalAccessException | InvocationTargetException e) {
             LOGGER.log(Level.WARNING, "There was a problem in the invocation of getParentBuild in hudson.matrix.MatrixRun", e);
         }
-        
+
         List<Action> actions = run.getActions();
         for (Action action : actions) {
             if (action == null) {

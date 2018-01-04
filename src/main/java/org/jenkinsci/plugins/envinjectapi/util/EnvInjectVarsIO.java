@@ -54,9 +54,9 @@ public class EnvInjectVarsIO {
     }
 
     private static void fromTxt(@Nonnull Reader reader, @Nonnull Map<String, String> result) throws EnvInjectException {
-        BufferedReader bufferedReader = new BufferedReader(reader);
+
         String line;
-        try {
+        try(BufferedReader bufferedReader = new BufferedReader(reader)) {
             while ((line = bufferedReader.readLine()) != null) {
                 StringTokenizer tokenizer = new StringTokenizer(line, TOKEN);
                 int tokens = tokenizer.countTokens();
@@ -66,12 +66,6 @@ public class EnvInjectVarsIO {
             }
         } catch (IOException ioe) {
             throw new EnvInjectException(ioe);
-        } finally {
-            try {
-                bufferedReader.close();
-            } catch (IOException ioe) {
-                throw new EnvInjectException(ioe);
-            }
         }
     }
 
