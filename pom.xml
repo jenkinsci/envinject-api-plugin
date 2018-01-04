@@ -9,7 +9,7 @@
   </parent>
 
   <artifactId>envinject-api</artifactId>
-  <version>1.5-SNAPSHOT</version>
+  <version>1.6-SNAPSHOT</version>
   <packaging>hpi</packaging>
   <name>EnvInject API Plugin</name>
   <description>Stores shared logic for Environment Injection management</description>
