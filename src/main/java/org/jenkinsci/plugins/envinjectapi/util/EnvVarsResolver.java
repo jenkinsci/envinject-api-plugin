@@ -232,10 +232,8 @@ public class EnvVarsResolver {
 
             return envVars;
 
-        } catch (IOException ioe) {
+        } catch (IOException | InterruptedException ioe) {
             throw new EnvInjectException(ioe);
-        } catch (InterruptedException ie) {
-            throw new EnvInjectException(ie);
         }
     }
     
