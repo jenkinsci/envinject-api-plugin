@@ -1,6 +1,10 @@
 Changelog
 ===
 
+### Newer versions
+
+See [GitHub releases](https://github.com/jenkinsci/envinject-api-plugin/releases)
+
 ### 1.5
 
 Release date: _Dec 28, 2017_
