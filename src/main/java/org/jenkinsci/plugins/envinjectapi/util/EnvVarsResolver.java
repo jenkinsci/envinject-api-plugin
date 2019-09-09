@@ -103,7 +103,7 @@ public class EnvVarsResolver {
 
     @CheckForNull
     private static Node getMasterNode() {
-        final Jenkins jenkins  = Jenkins.getInstance();
+        final Jenkins jenkins  = Jenkins.getInstanceOrNull();
         if (jenkins == null) {
             return null;
         }
@@ -138,7 +138,7 @@ public class EnvVarsResolver {
     private static Map<String, String> gatherEnvVarsMaster(@Nonnull Job<?, ?> job) throws EnvInjectException {
         final Jenkins jenkins;
         try {
-            jenkins = Jenkins.getActiveInstance();
+            jenkins = Jenkins.get();
         } catch(IllegalStateException ex) {
             throw new EnvInjectException(ex);
         }
@@ -168,12 +168,12 @@ public class EnvVarsResolver {
 
         EnvVars env = new EnvVars();
 
-        Jenkins jenkins = Jenkins.getInstance();
+        Jenkins jenkins = Jenkins.getInstanceOrNull();
         if (jenkins != null) {
             DescribableList<NodeProperty<?>, NodePropertyDescriptor> globalNodeProperties = jenkins.getGlobalNodeProperties();
             if (globalNodeProperties != null) {
                 for (NodeProperty nodeProperty : globalNodeProperties) {
-                    if (nodeProperty != null && nodeProperty instanceof EnvironmentVariablesNodeProperty) {
+                    if (nodeProperty instanceof EnvironmentVariablesNodeProperty) {
                         env.putAll(((EnvironmentVariablesNodeProperty) nodeProperty).getEnvVars());
                     }
                 }
@@ -183,7 +183,7 @@ public class EnvVarsResolver {
         if (node != null) {
             DescribableList<NodeProperty<?>, NodePropertyDescriptor> nodeProperties = node.getNodeProperties();
             for (NodeProperty nodeProperty : nodeProperties) {
-                if (nodeProperty != null && nodeProperty instanceof EnvironmentVariablesNodeProperty) {
+                if (nodeProperty instanceof EnvironmentVariablesNodeProperty) {
                     EnvVars envVars = ((EnvironmentVariablesNodeProperty) nodeProperty).getEnvVars();
                     if (envVars != null) {
                         for (Map.Entry<String, String> entry : envVars.entrySet()) {
