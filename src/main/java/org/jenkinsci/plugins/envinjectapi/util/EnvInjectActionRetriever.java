@@ -51,7 +51,7 @@ public class EnvInjectActionRetriever {
             LOGGER.log(Level.WARNING, "There was a problem in the invocation of getParentBuild in hudson.matrix.MatrixRun", e);
         }
 
-        List<? extends Action> actions = run.getAllActions();
+        List<Action> actions = run.getActions();
         for (Action action : actions) {
             if (action == null) {
                 continue;
