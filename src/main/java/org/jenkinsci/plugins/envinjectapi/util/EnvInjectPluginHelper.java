@@ -34,7 +34,7 @@ public class EnvInjectPluginHelper {
      * @return {@code true} If the plugin is installed. It may be not activated.
      */
     public static boolean isEnvInjectPluginInstalled() {
-        final Jenkins jenkins = Jenkins.getInstance();
+        final Jenkins jenkins = Jenkins.getInstanceOrNull();
         if (jenkins == null) {
             return false;
         }

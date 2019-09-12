@@ -45,8 +45,7 @@ public class EnvInjectVarsIO {
     public static void saveEnvironment(@Nonnull File rootDir, @Nonnull Map<String, String> envMap) throws EnvInjectException { 
         File f = new File(rootDir, ENVINJECT_TXT_FILENAME);
         try (Writer wr = Files.newBufferedWriter(f.toPath(), Charset.defaultCharset())) {
-            Map<String, String> map2Write = new TreeMap<>();
-            map2Write.putAll(envMap);
+            Map<String, String> map2Write = new TreeMap<>(envMap);
             toTxt(map2Write, wr);
         } catch (IOException | InvalidPathException ex) {
             throw new EnvInjectException(ex);
