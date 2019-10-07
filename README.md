@@ -2,7 +2,7 @@ EnvInject API Plugin
 ===
 
 [![Jenkins Plugin](https://img.shields.io/jenkins/plugin/v/envinject-api.svg)](https://plugins.jenkins.io/envinject-api)
-[![GitHub release](https://img.shields.io/github/release/jenkinsci/envinject-api-plugin.svg?label=release)](https://github.com/jenkinsci/envinject-api-plugin/releases/latest)
+[![GitHub release](https://img.shields.io/github/release/jenkinsci/envinject-api-plugin.svg?label=changelog)](https://github.com/jenkinsci/envinject-api-plugin/releases/latest)
 [![Jenkins Plugin Installs](https://img.shields.io/jenkins/plugin/i/envinject-api.svg?color=blue)](https://plugins.jenkins.io/envinject-api)
 
 This is an API plugin, which encapsulates [Jenkins EnvInject Library](https://github.com/jenkinsci/envinject-lib) 
