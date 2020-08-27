@@ -78,7 +78,7 @@ public class EnvVarsResolver {
         }
 
         // Retrieve node used for this build
-        Node builtOn = (run instanceof AbstractBuild) ? ((AbstractBuild)run).getBuiltOn() : null;
+        Node builtOn = (run instanceof AbstractBuild) ? ((AbstractBuild<?,?>)run).getBuiltOn() : null;
         
         // Check if node is always on. Otherwise, gather master env vars
         if (builtOn == null) {
@@ -172,7 +172,7 @@ public class EnvVarsResolver {
         if (jenkins != null) {
             DescribableList<NodeProperty<?>, NodePropertyDescriptor> globalNodeProperties = jenkins.getGlobalNodeProperties();
             if (globalNodeProperties != null) {
-                for (NodeProperty nodeProperty : globalNodeProperties) {
+                for (NodeProperty<?> nodeProperty : globalNodeProperties) {
                     if (nodeProperty instanceof EnvironmentVariablesNodeProperty) {
                         env.putAll(((EnvironmentVariablesNodeProperty) nodeProperty).getEnvVars());
                     }
@@ -182,7 +182,7 @@ public class EnvVarsResolver {
 
         if (node != null) {
             DescribableList<NodeProperty<?>, NodePropertyDescriptor> nodeProperties = node.getNodeProperties();
-            for (NodeProperty nodeProperty : nodeProperties) {
+            for (NodeProperty<?> nodeProperty : nodeProperties) {
                 if (nodeProperty instanceof EnvironmentVariablesNodeProperty) {
                     EnvVars envVars = ((EnvironmentVariablesNodeProperty) nodeProperty).getEnvVars();
                     if (envVars != null) {
@@ -224,7 +224,7 @@ public class EnvVarsResolver {
             envVars.put("NODE_LABELS", Util.join(node.getAssignedLabels(), " "));
             
             if (job instanceof AbstractProject) {
-                FilePath wFilePath = ((AbstractProject)job).getSomeWorkspace();
+                FilePath wFilePath = ((AbstractProject<?,?>)job).getSomeWorkspace();
                 if (wFilePath != null) {
                     envVars.put("WORKSPACE", wFilePath.getRemote());
                 }
