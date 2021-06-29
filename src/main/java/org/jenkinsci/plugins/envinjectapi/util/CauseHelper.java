@@ -15,7 +15,6 @@ import java.util.Locale;
 import javax.annotation.CheckForNull;
 import javax.annotation.Nonnull;
 import static org.apache.commons.lang.StringUtils.isNotBlank;
-import static com.google.common.base.Joiner.on;
 
 // Moved from EnvInject plugin
 /**
@@ -61,12 +60,12 @@ import static com.google.common.base.Joiner.on;
         List<String> nonEmptyNames = new ArrayList<>();
         for (String name : causeNames) {
             if (isNotBlank(name)) {
-                triggerVars.put(on("_").join(envBase, name), "true");
+                triggerVars.put(String.join("_", envBase, name), "true");
                 nonEmptyNames.add(name);
             }
         }
         // add variable containing all the trigger names
-        triggerVars.put(envBase, on(",").join(nonEmptyNames));
+        triggerVars.put(envBase, String.join(",", nonEmptyNames));
         return triggerVars;
     }
 
