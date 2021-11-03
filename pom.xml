@@ -10,7 +10,7 @@
   </parent>
 
   <artifactId>envinject-api</artifactId>
-  <version>1.8-SNAPSHOT</version>
+  <version>1.8</version>
   <packaging>hpi</packaging>
   <name>EnvInject API Plugin</name>
   <description>Stores shared logic for Environment Injection management</description>
@@ -41,7 +41,7 @@
     <connection>scm:git:ssh://github.com/jenkinsci/${project.artifactId}-plugin.git</connection>
     <developerConnection>scm:git:ssh://git@github.com/jenkinsci/${project.artifactId}-plugin.git</developerConnection>
     <url>https://github.com/jenkinsci/${project.artifactId}-plugin</url>
-    <tag>HEAD</tag>
+    <tag>envinject-api-1.8</tag>
   </scm>
   
   <dependencies>
