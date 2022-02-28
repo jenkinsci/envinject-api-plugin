@@ -10,7 +10,7 @@
   </parent>
 
   <artifactId>envinject-api</artifactId>
-  <version>1.10-SNAPSHOT</version>
+  <version>1.${changelist}</version>
   <packaging>hpi</packaging>
   <name>EnvInject API Plugin</name>
   <description>Stores shared logic for Environment Injection management</description>
@@ -38,6 +38,7 @@
   </developers>
 
   <properties>
+    <changelist>999999-SNAPSHOT</changelist>
     <java.level>8</java.level>
     <jenkins.version>2.319.3</jenkins.version>
   </properties>
@@ -46,7 +47,7 @@
     <connection>scm:git:ssh://github.com/jenkinsci/${project.artifactId}-plugin.git</connection>
     <developerConnection>scm:git:ssh://git@github.com/jenkinsci/${project.artifactId}-plugin.git</developerConnection>
     <url>https://github.com/jenkinsci/${project.artifactId}-plugin</url>
-    <tag>HEAD</tag>
+    <tag>${scmTag}</tag>
   </scm>
   
   <dependencies>
