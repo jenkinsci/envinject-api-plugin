@@ -3,7 +3,7 @@ package org.jenkinsci.plugins.envinjectapi.util;
 import hudson.Plugin;
 import hudson.model.Action;
 import hudson.model.Run;
-import javax.annotation.Nonnull;
+import edu.umd.cs.findbugs.annotations.NonNull;
 import jenkins.model.Jenkins;
 import org.jenkinsci.lib.envinject.EnvInjectAction;
 
@@ -24,7 +24,7 @@ public class EnvInjectPluginHelper {
      * @param run Run
      * @return {@code true} if the run has {@link EnvInjectAction} 
      */
-    public static boolean isEnvInjectActivated(@Nonnull Run<?, ?> run) {
+    public static boolean isEnvInjectActivated(@NonNull Run<?, ?> run) {
         Action envInjectAction = EnvInjectActionRetriever.getEnvInjectAction(run);
         return envInjectAction != null;
     }

@@ -26,8 +26,8 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import javax.annotation.CheckForNull;
-import javax.annotation.Nonnull;
+import edu.umd.cs.findbugs.annotations.CheckForNull;
+import edu.umd.cs.findbugs.annotations.NonNull;
 import jenkins.model.Jenkins;
 import jenkins.security.MasterToSlaveCallable;
 import org.jenkinsci.lib.envinject.EnvInjectException;
@@ -45,8 +45,8 @@ public class EnvVarsResolver {
         // Cannot be instantinated
     }
     
-    @Nonnull
-    public static Map<String, String> getPollingEnvVars(@Nonnull Job<?, ?> job, @CheckForNull Node node) throws EnvInjectException {
+    @NonNull
+    public static Map<String, String> getPollingEnvVars(@NonNull Job<?, ?> job, @CheckForNull Node node) throws EnvInjectException {
 
         final Run<?, ?> lastBuild = job.getLastBuild();
         if (lastBuild != null) {
@@ -65,8 +65,9 @@ public class EnvVarsResolver {
         return getDefaultEnvVarsJob(job, node);
     }
 
-    @Nonnull
-    public static Map<String, String> getEnVars(@Nonnull Run<?, ?> run) throws EnvInjectException {
+    @SuppressWarnings("unchecked")
+    @NonNull
+    public static Map<String, String> getEnVars(@NonNull Run<?, ?> run) throws EnvInjectException {
         Action envInjectAction = EnvInjectActionRetriever.getEnvInjectAction(run);
         if (envInjectAction != null) {
             try {
@@ -92,8 +93,8 @@ public class EnvVarsResolver {
         return getDefaultEnvVarsJob(run.getParent(), builtOn);
     }
 
-    @Nonnull
-    private static Map<String, String> getFallBackMasterNode(@Nonnull Job<?, ?> job) throws EnvInjectException {
+    @NonNull
+    private static Map<String, String> getFallBackMasterNode(@NonNull Job<?, ?> job) throws EnvInjectException {
         final Node masterNode = getMasterNode();
         if (masterNode == null) {
             return gatherEnvVarsMaster(job);
@@ -115,7 +116,7 @@ public class EnvVarsResolver {
     }
 
     @CheckForNull
-    public static String resolveEnvVars(@Nonnull Run<?, ?> run, @CheckForNull String value) throws EnvInjectException {
+    public static String resolveEnvVars(@NonNull Run<?, ?> run, @CheckForNull String value) throws EnvInjectException {
         if (value == null) {
             return null;
         }
@@ -123,8 +124,8 @@ public class EnvVarsResolver {
         return Util.replaceMacro(value, getEnVars(run));
     }
 
-    @Nonnull
-    private static Map<String, String> getDefaultEnvVarsJob(@Nonnull Job<?, ?> job, @Nonnull Node node) throws EnvInjectException {
+    @NonNull
+    private static Map<String, String> getDefaultEnvVarsJob(@NonNull Job<?, ?> job, @NonNull Node node) throws EnvInjectException {
         // TODO: wat
         assert node.getRootPath() != null;
         //--- Same code for master or a slave node
@@ -134,8 +135,8 @@ public class EnvVarsResolver {
         return result;
     }
 
-    @Nonnull
-    private static Map<String, String> gatherEnvVarsMaster(@Nonnull Job<?, ?> job) throws EnvInjectException {
+    @NonNull
+    private static Map<String, String> gatherEnvVarsMaster(@NonNull Job<?, ?> job) throws EnvInjectException {
         final Jenkins jenkins;
         try {
             jenkins = Jenkins.get();
@@ -163,7 +164,7 @@ public class EnvVarsResolver {
 
     //Strong limitation: Restrict here to EnvironmentVariablesNodeProperty subclasses
     //in order to avoid the propagation of a Launcher object and a BuildListener object
-    @Nonnull
+    @NonNull
     private static Map<String, String> gatherEnvVarsNodeProperties(@CheckForNull Node node) throws EnvInjectException {
 
         EnvVars env = new EnvVars();
@@ -201,8 +202,8 @@ public class EnvVarsResolver {
         return env;
     }
 
-    @Nonnull
-    private static Map<String, String> gatherEnvVarsNode(@Nonnull Job<?, ?> job, @Nonnull Node node) throws EnvInjectException {
+    @NonNull
+    private static Map<String, String> gatherEnvVarsNode(@NonNull Job<?, ?> job, @NonNull Node node) throws EnvInjectException {
         
         final FilePath rootPath = node.getRootPath();
         if (rootPath == null) {
@@ -244,8 +245,8 @@ public class EnvVarsResolver {
      * @param run Run
      * @return Set of environment variables, which depends on the cause type. 
      */
-    @Nonnull
-    public static Map<String, String> getCauseEnvVars(@Nonnull Run<?, ?> run) {
+    @NonNull
+    public static Map<String, String> getCauseEnvVars(@NonNull Run<?, ?> run) {
         CauseAction causeAction = run.getAction(CauseAction.class);
         Map<String, String> env = new HashMap<>();
         List<String> directCauseNames = new ArrayList<>();
