@@ -5,7 +5,7 @@
   <parent>
     <groupId>org.jenkins-ci.plugins</groupId>
     <artifactId>plugin</artifactId>
-    <version>4.33</version>
+    <version>4.37</version>
     <relativePath />
   </parent>
 
@@ -29,6 +29,11 @@
       <id>oleg_nenashev</id>
       <name>Oleg Nenashev</name>
       <timezone>+1</timezone>
+    </developer>
+    <developer>
+      <id>NotMyFault</id>
+      <name>Alex</name>
+      <email>contact@notmyfault.dev</email>
     </developer>
   </developers>
 
