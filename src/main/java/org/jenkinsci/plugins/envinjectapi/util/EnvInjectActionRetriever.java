@@ -8,8 +8,8 @@ import java.lang.reflect.Method;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.annotation.CheckForNull;
-import javax.annotation.Nonnull;
+import edu.umd.cs.findbugs.annotations.CheckForNull;
+import edu.umd.cs.findbugs.annotations.NonNull;
 import org.jenkinsci.lib.envinject.EnvInjectAction;
 
 /**
@@ -32,7 +32,7 @@ public class EnvInjectActionRetriever {
      *         Subclasses cannot be casted from all point of Jenkins (classes are not loaded in some point)
      */
     @CheckForNull
-    public static Action getEnvInjectAction(@Nonnull Run<?, ?> run) {
+    public static Action getEnvInjectAction(@NonNull Run<?, ?> run) {
 
         try {
             Class<?> matrixClass = Class.forName("hudson.matrix.MatrixRun");

@@ -12,8 +12,8 @@ import java.util.Map;
 import java.util.Set;
 
 import java.util.Locale;
-import javax.annotation.CheckForNull;
-import javax.annotation.Nonnull;
+import edu.umd.cs.findbugs.annotations.CheckForNull;
+import edu.umd.cs.findbugs.annotations.NonNull;
 import static org.apache.commons.lang.StringUtils.isNotBlank;
 
 // Moved from EnvInject plugin
@@ -37,7 +37,7 @@ import static org.apache.commons.lang.StringUtils.isNotBlank;
      * @param cause Cause to be added. For {@code Cause.UstreamCause} there will be in-depth search
      * @param depth Current search depth. {@link #MAX_UPSTREAM_DEPTH} is a limit
      */
-    static void insertRootCauseNames(@Nonnull Set<String> causeNamesTarget, @CheckForNull Cause cause, int depth) {
+    static void insertRootCauseNames(@NonNull Set<String> causeNamesTarget, @CheckForNull Cause cause, int depth) {
         if (cause instanceof Cause.UpstreamCause) {
             if (depth == MAX_UPSTREAM_DEPTH) {
                 causeNamesTarget.add("DEEPLYNESTEDCAUSES");
@@ -54,8 +54,8 @@ import static org.apache.commons.lang.StringUtils.isNotBlank;
         }
     }
 
-    @Nonnull
-    static Map<String, String> buildCauseEnvironmentVariables(@Nonnull String envBase, @Nonnull Collection<String> causeNames) {
+    @NonNull
+    static Map<String, String> buildCauseEnvironmentVariables(@NonNull String envBase, @NonNull Collection<String> causeNames) {
         Map<String, String> triggerVars = new HashMap<>();
         List<String> nonEmptyNames = new ArrayList<>();
         for (String name : causeNames) {

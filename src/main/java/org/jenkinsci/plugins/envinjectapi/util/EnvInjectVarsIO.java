@@ -8,8 +8,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.StringTokenizer;
 import java.util.TreeMap;
-import javax.annotation.CheckForNull;
-import javax.annotation.Nonnull;
+import edu.umd.cs.findbugs.annotations.CheckForNull;
+import edu.umd.cs.findbugs.annotations.NonNull;
 import org.jenkinsci.lib.envinject.EnvInjectException;
 
 /**
@@ -27,7 +27,7 @@ public class EnvInjectVarsIO {
     }
     
     @CheckForNull
-    public static Map<String, String> getEnvironment(@Nonnull File envInjectBaseDir) throws EnvInjectException {
+    public static Map<String, String> getEnvironment(@NonNull File envInjectBaseDir) throws EnvInjectException {
         File f = new File(envInjectBaseDir, ENVINJECT_TXT_FILENAME);
         if (!f.exists()) {
             return null;
@@ -42,7 +42,7 @@ public class EnvInjectVarsIO {
         }
     }
 
-    public static void saveEnvironment(@Nonnull File rootDir, @Nonnull Map<String, String> envMap) throws EnvInjectException { 
+    public static void saveEnvironment(@NonNull File rootDir, @NonNull Map<String, String> envMap) throws EnvInjectException { 
         File f = new File(rootDir, ENVINJECT_TXT_FILENAME);
         try (Writer wr = Files.newBufferedWriter(f.toPath(), Charset.defaultCharset())) {
             Map<String, String> map2Write = new TreeMap<>(envMap);
@@ -52,7 +52,7 @@ public class EnvInjectVarsIO {
         }
     }
 
-    private static void fromTxt(@Nonnull Reader reader, @Nonnull Map<String, String> result) throws EnvInjectException {
+    private static void fromTxt(@NonNull Reader reader, @NonNull Map<String, String> result) throws EnvInjectException {
 
         String line;
         try(BufferedReader bufferedReader = new BufferedReader(reader)) {
@@ -68,7 +68,7 @@ public class EnvInjectVarsIO {
         }
     }
 
-    private static void toTxt(@Nonnull Map<String, String> envMap, @Nonnull Writer fw) throws IOException {
+    private static void toTxt(@NonNull Map<String, String> envMap, @NonNull Writer fw) throws IOException {
         for (Map.Entry<String, String> entry : envMap.entrySet()) {
             fw.write(entry.getKey());
             fw.write(TOKEN);
