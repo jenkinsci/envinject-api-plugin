@@ -54,7 +54,7 @@
     <dependency>
       <groupId>org.jenkins-ci.lib</groupId>
       <artifactId>envinject-lib</artifactId>
-      <version>1.30</version>
+      <version>1.162.v3b_b_29fa_cc839</version>
     </dependency>
   </dependencies>
 
