@@ -5,7 +5,7 @@
   <parent>
     <groupId>org.jenkins-ci.plugins</groupId>
     <artifactId>plugin</artifactId>
-    <version>4.38</version>
+    <version>4.40</version>
     <relativePath />
   </parent>
 
@@ -13,7 +13,6 @@
   <version>1.${changelist}</version>
   <packaging>hpi</packaging>
   <name>EnvInject API Plugin</name>
-  <description>Stores shared logic for Environment Injection management</description>
   <url>https://github.com/jenkinsci/${project.artifactId}-plugin</url>
 
   <licenses>
@@ -39,8 +38,7 @@
 
   <properties>
     <changelist>999999-SNAPSHOT</changelist>
-    <java.level>8</java.level>
-    <jenkins.version>2.319.3</jenkins.version>
+    <jenkins.version>2.332.1</jenkins.version>
   </properties>
 
   <scm>
@@ -54,7 +52,13 @@
     <dependency>
       <groupId>org.jenkins-ci.lib</groupId>
       <artifactId>envinject-lib</artifactId>
-      <version>1.30</version>
+      <version>1.168.v835cb_a_16513d</version>
+      <exclusions>
+        <exclusion>
+          <groupId>org.kohsuke.stapler</groupId>
+          <artifactId>stapler</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>
   </dependencies>
 
