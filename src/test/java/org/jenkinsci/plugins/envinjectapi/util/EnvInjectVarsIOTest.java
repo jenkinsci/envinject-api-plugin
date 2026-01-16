@@ -1,29 +1,28 @@
 package org.jenkinsci.plugins.envinjectapi.util;
 
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.TemporaryFolder;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
 
 import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class EnvInjectVarsIOTest {
-    @Rule
-    public TemporaryFolder temporaryFolder = new TemporaryFolder();
+class EnvInjectVarsIOTest {
+
+    @TempDir
+    private File temporaryFolder;
 
     @Test
-    public void saveEnvironment() throws Exception {
-        File tmpDir = temporaryFolder.newFolder();
+    void saveEnvironment() throws Exception {
         Map<String, String> envMap = new HashMap<>();
         envMap.put("Key1", "Value1");
         envMap.put("Key 2", "Value 2");
         envMap.put("Key_3", "Value_3");
 
-        EnvInjectVarsIO.saveEnvironment(tmpDir, envMap);
+        EnvInjectVarsIO.saveEnvironment(temporaryFolder, envMap);
 
-        assertEquals(envMap, EnvInjectVarsIO.getEnvironment(tmpDir));
+        assertEquals(envMap, EnvInjectVarsIO.getEnvironment(temporaryFolder));
     }
 }
