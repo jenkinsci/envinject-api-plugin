@@ -14,7 +14,6 @@ import java.util.Set;
 import java.util.Locale;
 import edu.umd.cs.findbugs.annotations.CheckForNull;
 import edu.umd.cs.findbugs.annotations.NonNull;
-import static org.apache.commons.lang.StringUtils.isNotBlank;
 
 // Moved from EnvInject plugin
 /**
@@ -59,7 +58,7 @@ import static org.apache.commons.lang.StringUtils.isNotBlank;
         Map<String, String> triggerVars = new HashMap<>();
         List<String> nonEmptyNames = new ArrayList<>();
         for (String name : causeNames) {
-            if (isNotBlank(name)) {
+            if (name != null && !name.isEmpty()) {
                 triggerVars.put(String.join("_", envBase, name), "true");
                 nonEmptyNames.add(name);
             }
